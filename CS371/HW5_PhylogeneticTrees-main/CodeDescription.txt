@@ -1,0 +1,66 @@
+Needleman-Wunsch (10 Points)
+
+	In my code, the method "Needleman" fulfills this portion of the assignment.
+It takes three parameters (s1: species name of animal1 to compute cost, s2: species
+name of animal2 to compute cost of, costs: the dictionary of BLOSUM scores for each 
+species. In order to compute the Needleman-Wunsch score of this pair, this program
+fills out a dynamic programming table based off the Needleman-Wunsch Algorithm and
+then finds the max score which is the bottommost, rightmost index in the grid and 
+returns that.
+
+All-Pairs Needleman-Wunsch
+
+	In my code, the method "All_Pairs_Needleman_Wunsch" fulfills this portion
+of the assignment. It takes no parameters as it starts fresh by loading in the costs
+dictionary as well as the species dictionary from the disc. It then proceeds by creating
+the table dictionary which if fills with animal pairs as its key and that pairs Needleman
+Wunsch score as the value. This whole table is then saved to the disc as the file "table.json"
+
+Building Phylogenetic Trees (20 Points)
+
+	In my code, the method "get_spanning_tree" fulfills this portion of the 
+assignment. It takes no parameters since all the data needed to create this tree
+has already been calculated and saved to the disc in the All-Pairs Needleman-Wunsch
+method. So to begin, this method loads up the species dictionary (Key: Animal Name -> value: BLOSUM60 Score)
+and created a list labeled nodes and a dictionary labeled names (Key: Species name -> Value: that species node's index in nodes).
+These are used to create and track a node for each species which is done next. Then, the program
+initializes a Union Find structure and another list labeled roots. In roots,
+each index(i) corresponds to the node at index (i) in nodes and the value is
+the index of that nodes root in the nodes list. Once all the nodes are set to
+be their own root, the program loads up the dictionary labeled table of animal pairs and
+their needleman wunsch scores. These pairs are then loaded into a list as tuples and
+sorted by their scores in descending order. This sorted list is then looped through
+and each animal pair has its name split so that each species is its seperate entity
+in a tuple and then that tuple is added to a tuple with their score and appended to 
+the list pairs. Pairs then gets looped through and for each pair, each of the two animals
+are checked to see if their roots are the same using the find method in the UnionFind structure.
+If they have separate roots, a new node is then created to link these two clusters together and 
+they are unioned in the UnionFind and that node is appended to the nodes list. The tree is then drawn.
+
+Alternate Drawings (5 Points)
+
+	In my code, the method "shuffleTree" fulfills this portion of the assignment.
+It takes no parameters because it works almost exactly the same way as my get_spanning_tree
+method. The only difference is how each new nodes left and rights are assigned. Up until the
+loop that compares roots and creates new nodes, everything is exactly the same. however, the last
+loop is a little different. Right before this loop, a counter is initialized that starts at 0.
+Then, for every pair that does not have the same root and gets a new node, if the ctr is at a number
+cleanly divisable by 3, the newnode.left and newnode.right is assigned alphabetically with animal1 and
+animal2. Otherwise, it is done backwards alphabetically. This alters the tree just enough to shorten
+some of the edges connecting certain clusters. This can be seen in the provided PNG file "AlternateTreeDrawing"
+
+
+Clustering (10 Points)
+
+	In my code, the methods "getClusters" and "searchSubTrees" work together to fulfill
+this portion of the assignment. getClusters is called from the draw method of the Phylo tree
+and given the threshold and an empty cluster list as parameters. From there, this method works
+recursively from the root node towards the leaf nodes branching out left and right of every node
+it reaches until that node surpases the threshold. Then, that node is passed to searchSubTrees
+as the root of a subtree (its cluster). searchSubTrees then recursivelly searches this subtree 
+by once again branching out right and left until reaching a leafnode. When this occurs, the leafnodes
+key is returned and gets added to a list of the leafnodes in this cluster which are all separated by
+a double space. This allows each cluster to be passed back up to the getClusters method which, splits
+each species by the double space and sorts them alphabetically, then appends that list to the list, clusters
+which finally gets returned and can be printed in a more easy on the eyes format through the printClusters
+method.
